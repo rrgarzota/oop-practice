@@ -12,6 +12,8 @@ abstract class AbstractEntity
 
     protected $isActive;
 
+    private $colName;
+
     public function __construct(mysqli $db)
     {
         $this->db = $db;
@@ -83,10 +85,53 @@ abstract class AbstractEntity
     }
 
     abstract public function queryAllbyDesc();
+
+    public function parseColumn()
+    {
+        $col = $this->columns();
+
+        foreach($col as $name => $value) {
+            $this->colName .= $name . ' = "' . $value . '", ';
+        }
+    }
+
+    public function insert()
+    {
+        $this->parseColumn();
+
+        $insert = 'INSERT INTO ' . $this->table;
+        $set = 'SET ' . rtrim($this->colName, ", ");
+        $query = $insert . ' ' . $set;
+
+        $result = $this->db->query($query);
+
+        if ($result !== false) {
+            return $this->db->affected_rows;
+        } else {
+            // echo $this->db->error;
+            return;
+        }
+    }
     
-    abstract public function insert();
+    public function update($id)
+    {
+        $this->parseColumn();
+        
+        $update = 'UPDATE ' . $this->table;
+        $set = 'SET ' . rtrim($this->colName, ", ");
+        $condition = 'WHERE ' . $this->pk . ' = ' .$id;
+        $query = $update . ' ' . $set . ' ' . $condition;
+
+        $result = $this->db->query($query);
+
+        if ($result !== false) {
+            return 1;
+        } else {
+            // echo $this->db->error;
+            return;
+        }
+    }
     
-    abstract public function update($id);
 
     public function delete($id)
     {
