@@ -7,6 +7,6 @@ $dbName = 'test';
 $db = new mysqli($host, $username, $password, $dbName);
 
 if ($db->connect_errno) {
-    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    echo "Failed to connect to MySQL: (" . $db->connect_errno . ") " . $db->connect_error;
     exit;
 }

@@ -81,6 +81,40 @@ abstract class AbstractEntity
 
         return $result->fetch_assoc();
     }
+
+    abstract public function queryAllbyDesc();
+    
+    abstract public function insert();
+    
+    abstract public function update($id);
+
+    public function delete($id)
+    {
+        $delete = 'DELETE FROM '.$this->table;
+        $condition = 'WHERE ' . $this->pk . '= ' . $id;
+        $query = $delete . ' ' . $condition;
+
+        $result = $this->db->query($query);
+
+        if ($result !== false) {
+            return $this->db->affected_rows;
+        }else{
+            return $this->db->error;
+        }
+
+    }
+
+    public function getTotalCount(){
+        $query = 'SELECT COUNT(*) FROM '.$this->table;
+        $result = $this->db->query($query);
+
+        if ($result !== false) {
+            return $result->fetch_array()[0];
+        } else{
+            $this->db->error;
+        }
+    }
+    
     
     // prepared statement usage sample
     /*public function getById($id)
