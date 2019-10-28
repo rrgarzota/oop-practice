@@ -38,14 +38,6 @@ class Person extends AbstractEntity
         return $this->lname;
     }
 
-    public function columns(){
-        $col = array(
-                'name_first' => $this->fname, 
-                'name_last' => $this->lname
-            );
-        return $col;
-    }
-
     public function queryAllbyDesc()
     {
         $select = 'SELECT * FROM ' . $this->table;
@@ -76,6 +68,14 @@ class Person extends AbstractEntity
         } else {
             return $this->db->error;
         }
+    }
+
+    public function columnData(){
+        $col = array(
+                'name_first' => $this->fname, 
+                'name_last' => $this->lname
+            );
+        return $col;
     }
 
 }

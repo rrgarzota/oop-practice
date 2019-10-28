@@ -12,8 +12,6 @@ abstract class AbstractEntity
 
     protected $isActive;
 
-    private $colName;
-
     public function __construct(mysqli $db)
     {
         $this->db = $db;
@@ -86,21 +84,23 @@ abstract class AbstractEntity
 
     abstract public function queryAllbyDesc();
 
-    public function parseColumn()
+    public function parseData()
     {
-        $col = $this->columns();
+        $data = array();
 
-        foreach($col as $name => $value) {
-            $this->colName .= $name . ' = "' . $value . '", ';
+        foreach($this->columns() as $column => $value) {
+            array_push(
+                $data, 
+                '`' . $column . '` = "' . $this->db->escape_string($value) . '"'
+            );
         }
+        return implode(", ", $data);
     }
 
     public function insert()
     {
-        $this->parseColumn();
-
         $insert = 'INSERT INTO ' . $this->table;
-        $set = 'SET ' . rtrim($this->colName, ", ");
+        $set = 'SET ' . $this->parseData();
         $query = $insert . ' ' . $set;
 
         $result = $this->db->query($query);
@@ -114,11 +114,9 @@ abstract class AbstractEntity
     }
     
     public function update($id)
-    {
-        $this->parseColumn();
-        
+    {        
         $update = 'UPDATE ' . $this->table;
-        $set = 'SET ' . rtrim($this->colName, ", ");
+        $set = 'SET ' . $this->parseData();
         $condition = 'WHERE ' . $this->pk . ' = ' .$id;
         $query = $update . ' ' . $set . ' ' . $condition;
 
@@ -159,7 +157,8 @@ abstract class AbstractEntity
             $this->db->error;
         }
     }
-    
+
+    abstract public function columnData();
     
     // prepared statement usage sample
     /*public function getById($id)
