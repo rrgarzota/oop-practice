@@ -17,6 +17,7 @@ class Person extends AbstractEntity
     public function setFname($fname)
     {
         $this->fname = $fname;
+        $this->data['name_first'] = $this->fname;
 
         return $this;
     }
@@ -29,6 +30,7 @@ class Person extends AbstractEntity
     public function setLname($lname)
     {
         $this->lname = $lname;
+        $this->data['name_last'] = $this->lname;
 
         return $this;
     }
@@ -36,14 +38,6 @@ class Person extends AbstractEntity
     public function getLname()
     {
         return $this->lname;
-    }
-
-    public function columns(){
-        $col = array(
-                'name_first' => $this->fname, 
-                'name_last' => $this->lname
-            );
-        return $col;
     }
 
     public function queryAllbyDesc()
