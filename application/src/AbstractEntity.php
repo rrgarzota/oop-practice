@@ -88,7 +88,7 @@ abstract class AbstractEntity
     {
         $data = array();
 
-        foreach($this->columns() as $column => $value) {
+        foreach($this->columnData() as $column => $value) {
             array_push(
                 $data, 
                 '`' . $column . '` = "' . $this->db->escape_string($value) . '"'
